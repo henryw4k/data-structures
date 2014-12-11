@@ -21,3 +21,5 @@ Queue.prototype.size = function(){
 }
 
 
+// assuming(referencesThis).expect(/^((?!\/\/).)*(this)/.test(constructor)).to.be.true;
+

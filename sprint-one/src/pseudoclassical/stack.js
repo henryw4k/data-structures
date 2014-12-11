@@ -19,4 +19,3 @@ Stack.prototype.pop = function(){
 Stack.prototype.size = function (){
   return Math.max(0,this.counter);
 }
-
