@@ -18,10 +18,11 @@ HashTable.prototype.retrieve = function(k){
 
 HashTable.prototype.remove = function(k){
   var val = this.retrieve(k);
-  this._storage.each(function(asdf){
-    if(val === asdf){
-      delete asdf;
+  this._storage.each(function(item, index, list){
+    if(val === item){
+      list[index] = null;
     }
+
   });
 
   //delete this.retrieve(k);
