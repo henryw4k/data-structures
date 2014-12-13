@@ -38,17 +38,16 @@ var DLinkedList = function(){
   };
 
   list.addToHead = function(target){
+
+    if(!list.head && !list.tail){
+      list.addToTail(target);
+      return true;
+    }
     var newestNode = new Node(target);
 
-    if(!list.head){
-      list.addToTail(target);
-    }
-
     newestNode.next = list.head;
-    if(list.head){
-      list.head.prev =  newestNode;
-      list.head = newestNode;
-    }//if
+    list.head.prev =  newestNode;
+    list.head = newestNode;
   }
 
   list.removeTail = function(){
