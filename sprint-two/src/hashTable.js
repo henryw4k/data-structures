@@ -1,24 +1,48 @@
 var HashTable = function(){
   this._limit = 8;
+  this._currentSize=0;
   this._storage = LimitedArray(this._limit);
   // console.log(LimitedArray);
 };
 
+HashTable.prototype.rehash = function(size){
+  var oldLimit = this._limit;
+  this._limit = this._limit*size;
+  var oldHash = this._storage;
+  this._storage=LimitedArray(this._limit);
+  this._currentSize = 0;
+
+  for(var i=0;i<oldLimit;i++){
+    if(oldHash.get(i)){
+      for(var j=0;j<oldHash.get(i).length;j++){
+        this.insert(oldHash.get(i)[j][0],oldHash.get(i)[j][1]);
+      }
+    }
+  }
+}
+
 HashTable.prototype.insert = function(k, v){
+
   var i = getIndexBelowMaxForKey(k, this._limit);
   //if there isn't a subarray already
   var tuple = [k,v];
+
+  if(!this.retrieve(k)){
+    this._currentSize++;
+  }//if
+
+  if(this._currentSize >= .75 * this._limit){
+    this.rehash(2);
+  }
 
   if(this._storage.get(i)){
     var contents = this._storage.get(i);
     contents.push(tuple);
     this._storage.set(i, contents);
+
   } else {
     this._storage.set(i, [tuple]);
   }
-  // console.log(getIndexBelowMaxForKey);
-
-
 };
 
 HashTable.prototype.retrieve = function(k){
@@ -34,19 +58,25 @@ HashTable.prototype.retrieve = function(k){
 };
 
 HashTable.prototype.remove = function(k){
-  var val = this.retrieve(k);
-    this._storage.each(function(item, index, list){
-      if(item){
-        for(var j = 0; j < item.length; j++){
-          if(val === item[j][1]){
-            list[index].splice(j,1);
 
-          }//if
-        }//for
+  var i = getIndexBelowMaxForKey(k, this._limit);
+  var item = this._storage.get(i);
+
+  if(item){
+    for(var j = 0; j < item.length; j++){
+      if(k === item[j][0]){
+        item.splice(j,1);
+        this._currentSize--;
+          if(this._currentSize < .25 * this._limit){
+            this.rehash(.5);
+          }
       }//if
-    });//.each
+    }//for
+  }//if
+
   //delete this.retrieve(k);
 };
+
 
 
 /*

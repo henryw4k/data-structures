@@ -20,14 +20,14 @@ Graph.prototype.removeNode = function(node){
 };
 
 Graph.prototype.hasEdge = function(fromNode, toNode){
-  return !!(this.network[fromNode][toNode] &&
+  return Boolean(this.network[fromNode][toNode] &&
     this.network[toNode][fromNode]);
 
 };
 
 Graph.prototype.addEdge = function(fromNode, toNode){
-  this.network[fromNode][toNode] = toNode;
-  this.network[toNode][fromNode] = fromNode;
+  this.network[fromNode][toNode] = true;
+  this.network[toNode][fromNode] = true;
 };
 
 Graph.prototype.removeEdge = function(fromNode, toNode){
